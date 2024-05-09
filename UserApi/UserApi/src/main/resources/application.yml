@@ -1,10 +1,10 @@
 spring:
   application:
-    name: user-server
+    name: user-services
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     password: ''
-    url: jdbc:mysql://localhost:3306/transporte_publico
+    url: jdbc:mysql://localhost:3306/user-bd
     username: root
   jpa:
     hibernate:
@@ -12,10 +12,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+        type_contributor: com.demo.UserApi.models.PersonDtoTypeContributor
     show-sql: true
 
 server:
-    port: 0
+    port: 8082
 
 eureka:
     client:

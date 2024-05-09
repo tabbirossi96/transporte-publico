@@ -1,6 +1,6 @@
 package com.demo.UserApi.repositories;
 
-import com.demo.UserApi.models.User;
+import com.demo.UserApi.models.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

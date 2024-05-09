@@ -9,6 +9,7 @@
           <option value="UserApi" />
           <option value="UserApi" />
           <option value="UserApi" />
+          <option value="UserApi" />
         </list>
       </option>
       <option name="ignoredPackages">
@@ -17,6 +18,7 @@
           <option value="com.google.guava:guava:19.0" />
           <option value="com.thoughtworks.xstream:xstream:1.4.19" />
           <option value="org.apache.httpcomponents:httpclient:4.5.3" />
+          <option value="commons-fileupload:commons-fileupload:1.5" />
         </list>
       </option>
       <option name="ignoredReasons">
@@ -24,6 +26,7 @@
           <option value="Not exploitable" />
           <option value="Not exploitable" />
           <option value="Other" />
+          <option value="Not exploitable" />
           <option value="Not exploitable" />
         </list>
       </option>

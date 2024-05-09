@@ -1,4 +1,4 @@
-package com.demo.PersonApi.models;
+package com.demo.PersonApi.models.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

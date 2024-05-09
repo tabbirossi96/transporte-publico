@@ -1,7 +1,7 @@
 package com.demo.PersonApi.utils;
 
-import com.demo.PersonApi.models.Person;
-import com.demo.PersonApi.models.PersonDto;
+import com.demo.PersonApi.models.entities.Person;
+import com.demo.PersonApi.models.dtos.PersonDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

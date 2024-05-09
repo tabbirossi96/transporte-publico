@@ -1,7 +1,7 @@
 package com.demo.PersonApi.controllers;
 
-import com.demo.PersonApi.models.Person;
-import com.demo.PersonApi.models.PersonDto;
+import com.demo.PersonApi.models.entities.Person;
+import com.demo.PersonApi.models.dtos.PersonDto;
 import com.demo.PersonApi.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +19,7 @@ public class PersonController {
 
     @GetMapping("/all-persons") //trae todas las personas
     public List<PersonDto> allPersons(){
+
         return personService.allPersons();
     }
 
@@ -28,13 +29,13 @@ public class PersonController {
     }
 
     @GetMapping("/find-person/{id}") // busca persona
-    public Optional<Person> findPerson(@PathVariable Long id) {
+    public Person findPerson(@PathVariable Long id) {
         return personService.findPerson(id);
     }
 
     @PutMapping("/update-person") // actualiza persona
-    public Optional<Person> updatePerson(@RequestBody Person person){
-        return personService.updatePerson(person);
+    public void updatePerson(@RequestBody Person person){
+        personService.updatePerson(person);
     }
 
     @DeleteMapping("/delete-person/{id}") // elimina persona

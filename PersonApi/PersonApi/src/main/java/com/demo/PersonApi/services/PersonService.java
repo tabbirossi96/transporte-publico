@@ -1,7 +1,7 @@
 package com.demo.PersonApi.services;
 
-import com.demo.PersonApi.models.Person;
-import com.demo.PersonApi.models.PersonDto;
+import com.demo.PersonApi.models.entities.Person;
+import com.demo.PersonApi.models.dtos.PersonDto;
 import com.demo.PersonApi.repositories.PersonRepository;
 import com.demo.PersonApi.utils.PersonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +31,24 @@ public class PersonService {
     }
 
     //buscar persona
-    public Optional<Person> findPerson(Long id) {
-        return personRepository.findById(id);
+    public Person findPerson(Long id) {
+        Person person;
+        Optional<Person> personDB = personRepository.findById(id);
+        if(personDB.isPresent()){
+            person = personDB.get();
+        }
+        else {
+            // TODO: REEMPLAZAR CON UN THROW EXEPTION 409 (CATCHAR EN EL CONTROLLER EL 409)
+            person = new Person();
+        }
+        return person;
     }
 
     //actualizar persona
-    public Optional<Person> updatePerson(Person person) {
+    public void updatePerson(Person person) {
+        personRepository.findById(person.getId());
         personRepository.save(person);
-        return personRepository.findById(person.getId());
+
     }
 
     //eliminar persona

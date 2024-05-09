@@ -1,9 +1,7 @@
-package com.demo.UserApi.models;
+package com.demo.UserApi.models.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.demo.UserApi.models.dto.PersonDto;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,10 +20,15 @@ public class User {
     private Long id;
     private String userName;
     private String password;
+    private String status;
+    private Long personId;
 
-    public User(String userName, String password){
+
+    public User(String userName, String password, String status, Long personId){
         this.userName = userName;
         this.password = password;
+        this.status = status;
+        this.personId = personId;
     }
 
 }
