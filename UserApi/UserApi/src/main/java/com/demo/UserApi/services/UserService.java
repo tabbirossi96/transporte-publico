@@ -3,6 +3,7 @@ package com.demo.UserApi.services;
 import com.demo.UserApi.models.dto.PersonDto;
 import com.demo.UserApi.models.entity.User;
 import com.demo.UserApi.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +25,11 @@ public class UserService {
     }
 
     //crear usuarios
-    public void createUser(Long id, User user){
+    public void createUser(User user){
         //Creo una nueva instancia llamada newUser. Esta instancia representa al usuario que deseo crear
         User newUser = new User();
         // Llama al PersonClient(que se conecta por feing con PersonApi) para obtener el PersonDto completo
-        PersonDto person = personClient.findPerson(id);
+        PersonDto person = personClient.findPerson(user.getPersonId());
         // Defino los valores de los atributos de mi nuevo User. esto ingresa por body
         newUser.setUserName(user.getUserName());
         newUser.setPassword(user.getPassword());
@@ -40,18 +41,58 @@ public class UserService {
     }
 
     //buscar usuarios por id
-    public Optional<User> findUser(Long id){
-        return userRepository.findById(id);
+    public User findUser(Long id) {
+        //declaramos una variable local (vacia)
+        User user;
+        //el metodo del repositorio busca en la BD un user con el Id y lo guarda en el userDB, objeto tipo Optional
+        Optional<User> userDB = userRepository.findById(id);
+        //si el userDB trae un objeto tipo User, se asigna a user
+        return userDB.
+                //si el userDB esta vacio (no encontro al user por id) lanza un exception(error)
+                orElseThrow(() ->
+                        //exception especial de que un objeto no existe + mensaje personalizado
+                        new EntityNotFoundException("No encontramos al usuario con el ID: " + id));
     }
 
+//    public User findUser(Long id) {
+//        //declaramos una variable local (vacia)
+//        User user;
+//        //el metodo del repositorio busca en la BD un user con el Id y lo guarda en el userDB, objeto tip Optional
+//        Optional<User> userDB = userRepository.findById(id);
+//        //. Sino se le asigna un objeto vacio al user (argumento User::new)
+//        user = userDB.orElseGet(User::new);
+//        //el objeto obtenido se guarda en la variable user
+//        return user;
+//    }
+// ----------------------------------------------------------------------------------------------------
+
     //actualizar usuarios
-    public Optional<User> updateUser(User user) {
+    //TODO: MODIFICAR PARA COMO LO HICIMOS EN PERSONAPI
+    public void updateUser(User user) {
+        //el metodo del repositorio busca en la BD un user con el Id y lo guarda en el userDB, objeto tipo Optional
+        Optional<User> userDB = userRepository.findById(user.getId());
+        //si el userDB trae un objeto tipo User, se asigna a user
+        userDB.
+                //si el userDB esta vacio (no encontro al user por id) lanza un exception(error)
+                        orElseThrow(() ->
+                        //exception especial de que un objeto no existe + mensaje personalizado
+                        new EntityNotFoundException("No encontramos a la usuario con el ID: " + user.getId()));
+        //guardo en BD los cambios
         userRepository.save(user);
-        return userRepository.findById(user.getId());
     }
+
 
     //eliminar usuarios
     public void deleteUser(Long id){
+        //el metodo del repositorio busca en la BD un user con el Id y lo guarda en el userDB, objeto tipo Optional
+        Optional<User> userDB = userRepository.findById(id);
+        //si el userDB trae un objeto tipo User, se asigna a user
+        userDB.
+                //si el userDB esta vacio (no encontro al user por id) lanza un exception(error)
+                        orElseThrow(() ->
+                        //exception especial de que un objeto no existe + mensaje personalizado
+                        new EntityNotFoundException("No encontramos a la usuario con el ID: " + id));
+        //guardo en BD los cambios
         userRepository.deleteById(id);
     }
 

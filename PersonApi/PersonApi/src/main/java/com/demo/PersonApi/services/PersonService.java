@@ -4,6 +4,7 @@ import com.demo.PersonApi.models.entities.Person;
 import com.demo.PersonApi.models.dtos.PersonDto;
 import com.demo.PersonApi.repositories.PersonRepository;
 import com.demo.PersonApi.utils.PersonUtil;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,21 +33,29 @@ public class PersonService {
 
     //buscar persona
     public Person findPerson(Long id) {
+        //declaramos una variable local (vacia)
         Person person;
+        //el metodo del repositorio busca en la BD un person con el Id y lo guarda en el personDB, objeto tipo Optional
         Optional<Person> personDB = personRepository.findById(id);
-        if(personDB.isPresent()){
-            person = personDB.get();
-        }
-        else {
-            // TODO: REEMPLAZAR CON UN THROW EXEPTION 409 (CATCHAR EN EL CONTROLLER EL 409)
-            person = new Person();
-        }
-        return person;
+        //si el personDB trae un objeto tipo User, se asigna a person
+        return personDB.
+                //si el personDB esta vacio (no encontro al person por id) lanza un exception(error)
+                        orElseThrow(() ->
+                        //exception especial de que un objeto no existe + mensaje personalizado
+                        new EntityNotFoundException("No encontramos a la persona con el ID: " + id));
     }
 
     //actualizar persona
     public void updatePerson(Person person) {
-        personRepository.findById(person.getId());
+        //el metodo del repositorio busca en la BD un person con el Id y lo guarda en el personDB, objeto tipo Optional
+        Optional<Person> personDB = personRepository.findById(person.getId());
+        //si el personDB trae un objeto tipo User, se asigna a person
+        personDB.
+                //si el personDB esta vacio (no encontro al person por id) lanza un exception(error)
+                orElseThrow(() ->
+                        //exception especial de que un objeto no existe + mensaje personalizado
+                        new EntityNotFoundException("No encontramos a la persona con el ID: " + person.getId()));
+        //guardo en BD los cambios
         personRepository.save(person);
 
     }

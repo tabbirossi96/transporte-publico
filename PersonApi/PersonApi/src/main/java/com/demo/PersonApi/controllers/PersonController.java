@@ -19,7 +19,6 @@ public class PersonController {
 
     @GetMapping("/all-persons") //trae todas las personas
     public List<PersonDto> allPersons(){
-
         return personService.allPersons();
     }
 

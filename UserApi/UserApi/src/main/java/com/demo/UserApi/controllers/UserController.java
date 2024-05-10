@@ -25,18 +25,18 @@ public class UserController {
     }
 
     @PostMapping("/create-user") //crea users
-    public void createUser(@PathVariable Long id, @RequestBody User user) {
-        userService.createUser(id, user);
+    public void createUser(@RequestBody User user) {
+        userService.createUser(user);
     }
 
     @GetMapping("/find-user/{id}") // busca user por id
-    public Optional<User> findUser(@PathVariable Long id) {
+    public User findUser(@PathVariable Long id) {
         return userService.findUser(id);
     }
 
     @PutMapping("/update-user") // actualiza users
-    public Optional<User> updateUser(@RequestBody User user){
-        return userService.updateUser(user);
+    public void updateUser(@RequestBody User user){
+        userService.updateUser(user);
     }
 
     @DeleteMapping("/delete-user/{id}") // elimina users
@@ -49,8 +49,8 @@ public class UserController {
         return userService.allPersons();
     }
 
-    @GetMapping("/find-person") //busca personas por id
-    public Optional<PersonDto> findPerson(Long id){
+    @GetMapping("/find-person/{id}") //busca personas por id
+    public Optional<PersonDto> findPerson(@PathVariable Long id){
         return userService.findPerson(id);
     }
 //----------------------------------------------------------------------------------------------------------------------
