@@ -12,7 +12,6 @@ import java.util.List;
 
 public class PersonUtil {
 
-
     public PersonDto personMapper (Person person){
         return new PersonDto(person.getId(), person.getName(), person.getLastname(), person.getDni(), person.getEmail(), person.getBirthdate());
     }
