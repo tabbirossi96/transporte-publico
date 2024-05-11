@@ -20,7 +20,7 @@ public class User {
     private Long id;
     private String userName;
     private String password;
-    private String status;
+    private String status; //TODO: cambiar nombre de atributo a status_user
     private Long personId;
 
 

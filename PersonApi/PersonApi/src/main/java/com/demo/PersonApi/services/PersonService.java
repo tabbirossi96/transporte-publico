@@ -27,8 +27,8 @@ public class PersonService {
     }
 
     //crear persona
-    public Person createPerson(Person person){
-        return personRepository.save(person);
+    public void createPerson(Person person){
+        personRepository.save(person);
     }
 
     //buscar persona
@@ -47,21 +47,15 @@ public class PersonService {
 
     //actualizar persona
     public void updatePerson(Person person) {
-        //el metodo del repositorio busca en la BD un person con el Id y lo guarda en el personDB, objeto tipo Optional
         Optional<Person> personDB = personRepository.findById(person.getId());
-        //si el personDB trae un objeto tipo User, se asigna a person
-        personDB.
-                //si el personDB esta vacio (no encontro al person por id) lanza un exception(error)
-                orElseThrow(() ->
-                        //exception especial de que un objeto no existe + mensaje personalizado
-                        new EntityNotFoundException("No encontramos a la persona con el ID: " + person.getId()));
-        //guardo en BD los cambios
+        personDB.orElseThrow(() -> new EntityNotFoundException("No encontramos a la persona con el ID: " + person.getId()));
         personRepository.save(person);
-
     }
 
     //eliminar persona
     public void deletePerson(Long id){
+        Optional<Person> personDB = personRepository.findById(id);
+        personDB.orElseThrow(() -> new EntityNotFoundException("No encontramos a la persona con el ID: " + id));
         personRepository.deleteById(id);
     }
 
