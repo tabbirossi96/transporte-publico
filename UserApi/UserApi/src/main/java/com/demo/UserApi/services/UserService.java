@@ -23,7 +23,7 @@ public class UserService {
     public List<User> allUser(){
         return userRepository.findAll();
     }
-
+//todo: hacer lo del user dto y mapper
     //crear usuarios
     public void createUser(User user){
         //Creo una nueva instancia llamada newUser. Esta instancia representa al usuario que deseo crear

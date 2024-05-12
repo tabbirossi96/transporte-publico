@@ -1,4 +1,4 @@
-package com.demo.EcobiciApi.models;
+package com.demo.EcobiciApi.models.dtos.stations;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

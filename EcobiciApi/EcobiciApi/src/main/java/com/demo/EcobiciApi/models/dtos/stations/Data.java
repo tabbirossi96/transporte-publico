@@ -1,4 +1,4 @@
-package com.demo.EcobiciApi.models;
+package com.demo.EcobiciApi.models.dtos.stations;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -10,5 +10,5 @@ import java.util.ArrayList;
 @NoArgsConstructor
 
 public class Data{
-    public ArrayList<Station> stations;
+    private ArrayList<Station> stations;
 }

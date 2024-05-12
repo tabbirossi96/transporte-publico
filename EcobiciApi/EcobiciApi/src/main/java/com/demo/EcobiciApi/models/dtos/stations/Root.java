@@ -1,4 +1,4 @@
-package com.demo.EcobiciApi.models;
+package com.demo.EcobiciApi.models.dtos.stations;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class Root{
-    public int last_updated;
-    public int ttl;
-    public Data data;
+    private int last_updated;
+    private int ttl;
+    private Data data;
 }
