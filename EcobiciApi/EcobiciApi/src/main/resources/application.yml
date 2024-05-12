@@ -1,5 +1,3 @@
-spring.application.name=EcobiciApi
-
 spring:
   application:
     name: ecobici-services
@@ -28,8 +26,4 @@ eureka:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
   instance:
     preferIpAddress: true
-
-ecobici:
-  information-url: ${STATION_INFORMATION_URL:https://apitransporte.buenosaires.gob.ar/ecobici/gbfs/stationInformation?client_id=99512ce528fa4346a461204d35deb6f6&client_secret=4441C00135Eb4659B2687bfFd89D2e55}
-  status-url: ${STATION_STATUS_URL:https://apitransporte.buenosaires.gob.ar/ecobici/gbfs/stationStatus?client_id=99512ce528fa4346a461204d35deb6f6&client_secret=4441C00135Eb4659B2687bfFd89D2e55}
 

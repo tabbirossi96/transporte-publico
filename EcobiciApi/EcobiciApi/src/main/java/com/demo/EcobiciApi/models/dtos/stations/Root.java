@@ -1,10 +1,14 @@
 package com.demo.EcobiciApi.models.dtos.stations;
+import com.demo.EcobiciApi.models.dtos.stations.Data;
+
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
