@@ -28,7 +28,13 @@ public class EcobiciController {
 
 
     //guardar estacion favorita
+    //request:id_estacion_fav, nombre usuario
+    //llenar tu entity de la estasciones favorita y listo
+    //response: 200 ok
 
-    //levantar las estaciones favortias
+
+
+
+    //levantar las estaciones favortias POR Usuario
 
 }

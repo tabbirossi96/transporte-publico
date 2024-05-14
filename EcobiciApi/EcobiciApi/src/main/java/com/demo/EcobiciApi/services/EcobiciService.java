@@ -2,9 +2,13 @@ package com.demo.EcobiciApi.services;
 
 import com.demo.EcobiciApi.models.dtos.stations.Root;
 import com.demo.EcobiciApi.models.dtos.stations.Station;
+import com.demo.EcobiciApi.models.dtos.stations.StationFavDto;
+import com.demo.EcobiciApi.models.dtos.stations.otros.User;
 import com.demo.EcobiciApi.models.entities.StationAttribute;
+import com.demo.EcobiciApi.models.entities.StationFavorite;
 import com.demo.EcobiciApi.services.api.EcobiciClient;
 import com.demo.EcobiciApi.models.dtos.stations.Data;
+import com.demo.EcobiciApi.services.api.UserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,19 +21,40 @@ public class EcobiciService {
 
     @Autowired
     EcobiciClient ecobiciClient;
-
+    @Autowired
+    UserClient userClient;
 
     //create
 
+    public void createStationFav (Long station_id, String nameUser){
+        StationFavDto newStationFavDto = new StationFavDto();
+        User userL = userClient.findUser(newStationFavDto.getUser_id());
+        this.getStationAttributes(String clientId, String clientSecret);
+
+        newStationFavDto.setUser_id();
+    }
+
+    //en user crear un endpoint(metodo servicio)
+
+
+    public void createUser(User user){
+        //Creo una nueva instancia llamada newUser. Esta instancia representa al usuario que deseo crear
+        User newUser = new User();
+        // Llama al PersonClient(que se conecta por feing con PersonApi) para obtener el PersonDto completo
+        PersonDto person = personClient.findPerson(user.getPersonId());
+
+        // Defino los valores de los atributos de mi nuevo User. esto ingresa por body
+        newUser.setUserName(user.getUserName());
+        newUser.setPassword(user.getPassword());
+        newUser.setStatus(user.getStatus());
+        // Asigno el Id del PersonDto al atributo personId de mi nuevo User
+        newUser.setPersonId(person.getId());
+        // Guardo el nuevo objeto de la clase User en mi user-bd
+        userRepository.save(newUser);
+    }
+
+
     //get-all (read)
-
-    //find-by-id (read)
-
-    //update
-
-    //delete
-
-    //traer los atributos que yo quiero
     public List<StationAttribute> getStationAttributes(String clientId, String clientSecret) {
         //creo una lista vacía que luego tendra los atributos que yo quiero
         List<StationAttribute> stationAttributes = new ArrayList<>();
@@ -59,11 +84,12 @@ public class EcobiciService {
 
         //inicio un segundo bucle para iterar en la lista de station status
         //para obtener los atributos que quiero de esa lista
+
+        //variable para usar de indice
         int i = 0;
         for ( StationAttribute aux : stationAttributes) {
-            //con el if compruebo que los id de las estaciones de station status coincidan con los
-            //id de las station information
             for (Station stationStatus : stationsStatus) {
+                //agarro el id de mi aux y busco en stationstatus el mismo id
                 if (stationStatus.getStation_id().equals(aux.getStation_id())) {
                     aux.setNum_bikes_available(stationStatus.getNum_bikes_available());
                     aux.setNum_docks_available(stationStatus.getNum_docks_available());
@@ -72,11 +98,20 @@ public class EcobiciService {
                     break;
                 }
             }
+            //me muevo una posicion en el indice por cada vuelta
             i++;
         }
-                //devuelvo la lista de estaciones con los atributos que yo necesito.
+        //devuelvo la lista de estaciones con los atributos que yo necesito.
         return stationAttributes;
     }
+
+    //find-by-userId List  (read)
+
+    //update
+
+    //delete
+
+
 
 
 

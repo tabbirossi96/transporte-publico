@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//@Entity
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,14 +16,21 @@ import lombok.NoArgsConstructor;
 
 public class StationFavorite {
 
+    //propio de esta clase
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long station_fav_id;
-    private Long station_id;
+
+    //atributos a traer desde USER-API
     private Long user_id;
-    private String name_station;
-    private String address_station;
-    // TODO: Agregar capacidad total y cantidad de bicis disponibles
+
+    //atributos a traer desde stationAttribute
+    private String station_id;
+    private String name;
+    private String address;
+    private int num_bikes_available;
+    private int num_docks_available;
+    private String status;
 
 
 

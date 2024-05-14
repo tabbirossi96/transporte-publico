@@ -12,15 +12,20 @@ import java.util.List;
 
 public class PersonUtil {
 
-    public PersonDto personMapper (Person person){
+    public PersonDto personToDto (Person person){
         return new PersonDto(person.getId(), person.getName(), person.getLastname(), person.getDni(),
                 person.getEmail(), person.getBirthdate());
+    }
+
+    public Person dtoToPerson (PersonDto personDto){
+        return new Person(personDto.getId(), personDto.getName(), personDto.getLastname(), personDto.getDni(),
+                personDto.getEmail(), personDto.getBirthdate());
     }
 
     public List<PersonDto> personMapper(List<Person> persons){
         List<PersonDto> personDto = new ArrayList<>();
         for (Person person : persons) {
-            personDto.add(personMapper(person));
+            personDto.add(personToDto(person));
         }
         return personDto;
         }
