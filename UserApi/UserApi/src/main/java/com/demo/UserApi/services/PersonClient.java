@@ -20,6 +20,9 @@ public interface PersonClient {
 
     @GetMapping("/find-person/{id}")
     PersonDto findPerson(@PathVariable Long id);
+
+    @GetMapping("/find-id-by-DNI/{dni}")
+    Long findIdByDNI(@PathVariable int dni);
 }
 
 

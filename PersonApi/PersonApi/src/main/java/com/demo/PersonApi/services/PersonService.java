@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -25,11 +26,21 @@ public class PersonService {
     @Autowired
     PersonUtil personUtil;
 
-    //TODO: AGREGAR UNA EXCEPTION
+//----------------------------------------------------------------------------------------------------------------------
+//  METODOS CRUD
+//----------------------------------------------------------------------------------------------------------------------
+
     //treaer todas las personas
-    public List<PersonDto> allPersons(){
+    public List<PersonDto> allPersons() {
+        //llamamos a la lista de la bd
         List<Person> personList = personRepository.findAll();
-        return personUtil.personMapper(personList);
+        try { //si encuentra la lista
+            return personUtil.personMapper(personList);
+        } //otro error
+        catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error", e);
+        }
     }
 
     //crear persona
@@ -50,7 +61,6 @@ public class PersonService {
         }
     }
 
-
     //buscar persona
     public PersonDto findPerson(Long id) {
         //declaramos una variable local (vacia)
@@ -60,13 +70,12 @@ public class PersonService {
         //si el personDB trae un objeto tipo User, se asigna a personDto
         personDB.
                 //si el personDB esta vacio (no encontro al person por id) lanza un exception(error)
-                orElseThrow(() ->
-                //exception especial de que un objeto no existe + mensaje personalizado
-                new EntityNotFoundException("No encontramos a la persona con el ID: " + id));
+                        orElseThrow(() ->
+                        //exception especial de que un objeto no existe + mensaje personalizado
+                        new EntityNotFoundException("No encontramos a la persona con el ID: " + id));
         //convierto de person a dto
         PersonDto personDto = personUtil.personToDto(personDB.get());
         return personDto;
-
     }
 
     //actualizar persona
@@ -82,13 +91,13 @@ public class PersonService {
             //si no...
         } catch (Exception e) {
             // excepción con mensaje + HttpStatus 500
-            throw new ResponseStatusException( HttpStatus.INTERNAL_SERVER_ERROR,
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error al actualizar los datos la persona", e);
         }
     }
 
     //eliminar persona
-    public void deletePerson(Long id){
+    public void deletePerson(Long id) {
         Optional<Person> personDB = personRepository.findById(id);
         personDB.orElseThrow(() -> new EntityNotFoundException
                 ("No encontramos a la persona con el ID: " + id));
@@ -102,50 +111,100 @@ public class PersonService {
         }
     }
 
-    //Validar el ingreso de los datos
-    private void validateAttributes(PersonDto personDto) throws Exception {
-        // Validar nombre
-        if (personDto.getName() == null || personDto.getName().isEmpty()) {
-            throw new NullOrVoidException("El nombre no puede ser nulo o vacío");
+//----------------------------------------------------------------------------------------------------------------------
+//  OTROS METODOS
+//----------------------------------------------------------------------------------------------------------------------
+
+    //metodo que busca un personId por DNI
+    public Long getPersonIdByDNI(int dni) {
+        //busco en la bd la persona que tenga ese DNI
+        Person person = personRepository.findByDNI(dni);
+        //si encuentra la persona, me devuelve el personId.
+        if (person != null) {
+            return person.getId();
+        } else {
+            throw new EntityNotFoundException("No encontramos la persona");
         }
-        if (personDto.getName().length() < 3) { //valida que minimo haya 3 letras
+    }
+
+    //Metodo para validar el ingreso de los datos
+    private void validateAttributes(PersonDto personDto) throws Exception {
+        String name = personDto.getName();
+        String lastname = personDto.getLastname();
+        int dni = personDto.getDni();
+        String email = personDto.getEmail();
+        LocalDate birthdate = personDto.getBirthdate();
+
+        this.validateFormatName(name);
+
+        this.validateFormatLastname(lastname);
+
+        this.validateFormatDNI(dni);
+
+        Person existingPerson = personRepository.findByDNI(personDto.getDni());
+        if (existingPerson != null) {
+            throw new UniqueException("Este DNI ya fue utilizado");
+        }
+
+        this.validateFormatEmail(email);
+
+        this.validateFormatBirthdate(birthdate);
+    }
+
+//----------------------------------------------------------------------------------------------------------------------
+//  VALIDACIONES DE LOS FORMATOS DE LOS ATRIBUTOS
+//----------------------------------------------------------------------------------------------------------------------
+
+    private void validateFormatName(String name) throws Exception {
+        if (name == null || name.isEmpty()) {
+            throw new NullOrVoidException("Escribir nombre");
+        }
+        if (name.length() < 3) { //valida que minimo haya 3 letras
             throw new CharactersMinExceptions("El nombre debe tener al menos 3 caracteres");
         }
-        if (!personDto.getName().matches("[a-zA-Z]+")) { //valida que solo haya letras
+        if (!name.matches("[a-zA-Z]+")) { //valida que solo haya letras
             throw new OnlyLettersException("El nombre no puede contener números");
         }
+    }
 
-        // Validar apellido
-        if (personDto.getLastname() == null || personDto.getLastname().isEmpty()) {
-            throw new NullOrVoidException("El apellido no puede ser nulo o vacío");
+    private void validateFormatLastname(String lastname) throws Exception {
+        if (lastname == null || lastname.isEmpty()) {
+            throw new NullOrVoidException("Escribir apellido");
         }
-        if (personDto.getLastname().length() < 3) { //valida que minimo haya 3 letras
+        if (lastname.length() < 3) { //valida que minimo haya 3 letras
             throw new CharactersMinExceptions("El apellido debe tener al menos 3 caracteres");
         }
-        if (!personDto.getLastname().matches("[a-zA-Z]+")) { //valida que solo haya letras
+        if (!lastname.matches("[a-zA-Z]+")) { //valida que solo haya letras
             throw new OnlyLettersException("El apellido no puede contener números");
         }
+    }
 
-        // Validar DNI
-        if (personDto.getDni() >= 1 && personDto.getDni() < 99999999) {
-            throw new NumberDniException("Numero de Dni incongruente");
-        }
-
-        // Validar email
-        if (personDto.getEmail() == null || personDto.getEmail().isEmpty()) {
-            throw new NullOrVoidException("El correo electrónico no puede ser nulo o vacío");
+    private void validateFormatEmail(String email) throws Exception {
+        if (email == null || email.isEmpty()) {
+            throw new NullOrVoidException("Escribir email");
         }
         String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$"; //valida el formato del email (zaraza123@example.com)
         Pattern pattern = Pattern.compile(emailRegex);
-        Matcher matcher = pattern.matcher(personDto.getEmail());
+        Matcher matcher = pattern.matcher(email);
         if (!matcher.matches()) {
             throw new FormatEmailException("El correo electrónico tiene un formato incorrecto");
         }
+    }
 
-        // Validar fecha de nacimiento
-        if (personDto.getBirthdate() == null) {
-            throw new NullOrVoidException("La fecha de nacimiento no puede ser nula");
+    private void validateFormatDNI(int dni) throws Exception {
+        if (dni >= 1 && dni < 99999999) {
+            throw new NumberDniException("Numero de Dni incongruente");
         }
     }
+
+    private void validateFormatBirthdate(LocalDate birthdate) throws Exception {
+        if (birthdate == null) {
+            throw new NullOrVoidException("Colocar fecha de nacimiento");
+        }
+    }
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 }
 

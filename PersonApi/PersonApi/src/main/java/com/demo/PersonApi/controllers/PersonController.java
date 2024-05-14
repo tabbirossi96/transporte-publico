@@ -24,11 +24,11 @@ public class PersonController {
     public ResponseEntity<?> allPersons(){
         try{
             List<PersonDto> personDto = personService.allPersons();
-            if (personDto.isEmpty()) {
+            if (personDto.isEmpty()) { //si la lista esta vacia...
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT); //Http 204
-            }
+            }//si encuentra la lista...
             return new ResponseEntity<>(personDto, HttpStatus.OK); //Http 200
-        }
+        }//otro error...
         catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
         }
@@ -46,16 +46,16 @@ public class PersonController {
         }
     }
 
-    @GetMapping("/find-person/{id}") // busca persona
+    @GetMapping("/find-person/{id}") // busca persona por id
     public ResponseEntity<?> findPerson(@PathVariable Long id) {
         try {
-            personService.findPerson(id);
+            PersonDto personDto = personService.findPerson(id);
             //si encuentra el usuario
             return new ResponseEntity<>(findPerson(id), HttpStatus.OK); //Http 202
         } //si no...
         catch(EntityNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
-        }
+        }//otro error...
         catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
         }
@@ -70,7 +70,7 @@ public class PersonController {
         } //si no...
         catch(EntityNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
-        }
+        }//otro error...
         catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
         }
@@ -85,9 +85,23 @@ public class PersonController {
         } //si no...
         catch(EntityNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
-        }
+        }//otro error...
         catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
+        }
+    }
+
+    @GetMapping("/find-id-by-DNI/{dni}")
+    public ResponseEntity<?> findIdByDNI(@PathVariable int dni) {
+        try {
+            Long personId = personService.getPersonIdByDNI(dni);
+            return new ResponseEntity<>(personId, HttpStatus.OK);
+        }
+        catch(EntityNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
