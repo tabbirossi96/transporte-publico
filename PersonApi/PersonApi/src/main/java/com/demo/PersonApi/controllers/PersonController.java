@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping ("/persons")
@@ -49,9 +48,9 @@ public class PersonController {
     @GetMapping("/find-person/{id}") // busca persona por id
     public ResponseEntity<?> findPerson(@PathVariable Long id) {
         try {
-            PersonDto personDto = personService.findPerson(id);
+            PersonDto responsePerson = personService.findPerson(id);
             //si encuentra el usuario
-            return new ResponseEntity<>(findPerson(id), HttpStatus.OK); //Http 202
+            return new ResponseEntity<>(responsePerson, HttpStatus.OK); //Http 202
         } //si no...
         catch(EntityNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404

@@ -5,7 +5,6 @@ import com.demo.EcobiciApi.exceptions.OnlyLettersException;
 import com.demo.EcobiciApi.models.dtos.stations.Root;
 import com.demo.EcobiciApi.models.dtos.stations.Station;
 import com.demo.EcobiciApi.models.dtos.stations.StationFavDto;
-import com.demo.EcobiciApi.models.dtos.stations.otros.User;
 import com.demo.EcobiciApi.models.entities.StationAttribute;
 import com.demo.EcobiciApi.models.entities.StationFavorite;
 import com.demo.EcobiciApi.repositories.StationFavoriteRepository;
@@ -138,7 +137,7 @@ public class EcobiciService {
     //find-by-userId List  (read)
     public List<StationFavDto> getStationFavByUserId(Long user_id) {
         //busca las stacionesfavoritas para ese user_id
-        List<StationFavorite> stationDB = stationFavoriteRepository.findByUserId(user_id);
+        List<StationFavorite> stationDB = stationFavoriteRepository.findByUser_id(user_id);
         if (stationDB.isEmpty()) { //si la lista vuelve vacia
             throw new EntityNotFoundException("No encontramos estaciones favoritas");
         }
@@ -169,7 +168,7 @@ public class EcobiciService {
             return stationFav;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Error al actualizar el alias", e);
+                    "Error al actualizar el alias: " + e.getMessage(), e);
         }
     }
 
@@ -187,6 +186,7 @@ public class EcobiciService {
         }
     }
 
+
 //----------------------------------------------------------------------------------------------------------------------
 // OTROS METODOS
 //----------------------------------------------------------------------------------------------------------------------
@@ -196,7 +196,7 @@ public class EcobiciService {
         if (alias.length() < 3 || alias.length() > 10) {
             throw new LengthExceptions("El alias debe tener entre 3 y 10 caracteres");
         }
-        if (!alias.matches("[a-zA-Z]+")) {
+        if (!alias.matches("[a-zA-Z ]+")) {
             throw new OnlyLettersException("El alias solo puede contener letras");
         }
     }

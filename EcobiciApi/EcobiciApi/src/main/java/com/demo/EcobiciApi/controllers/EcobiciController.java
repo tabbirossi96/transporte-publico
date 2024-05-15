@@ -3,6 +3,7 @@ package com.demo.EcobiciApi.controllers;
 import com.demo.EcobiciApi.exceptions.LengthExceptions;
 import com.demo.EcobiciApi.exceptions.OnlyLettersException;
 import com.demo.EcobiciApi.models.dtos.stations.StationFavDto;
+import com.demo.EcobiciApi.models.entities.Alias;
 import com.demo.EcobiciApi.models.entities.StationAttribute;
 import com.demo.EcobiciApi.models.entities.StationFavorite;
 import com.demo.EcobiciApi.services.EcobiciService;
@@ -44,11 +45,11 @@ public class EcobiciController {
 
     //guardar estacion favorita
     @PostMapping("/save-stationfav/{station_id}/{username}")
-    public ResponseEntity<?> createStationFavorite(@RequestBody String alias, @PathVariable Long station_id,
+    public ResponseEntity<?> createStationFavorite(@RequestBody Alias alias, @PathVariable Long station_id,
                                                    @PathVariable String username, @RequestParam String clientId,
                                                    @RequestParam String clientSecret) {
         try {
-            StationFavorite saveStationFav = ecobiciService.saveStationFavorite(alias, station_id, username, clientId, clientSecret);
+            StationFavorite saveStationFav = ecobiciService.saveStationFavorite(alias.getAlias(), station_id, username, clientId, clientSecret);
             return ResponseEntity.status(HttpStatus.CREATED).body(saveStationFav); // Http 201
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); // Http 500
@@ -72,14 +73,14 @@ public class EcobiciController {
 
     //actualizar alias de la estacion favorita
     @PutMapping("/update-stationFav/{station_fav_id}")
-    public ResponseEntity<?> updateStationFav(@PathVariable Long station_fav_id, @RequestBody String alias) {
+    public ResponseEntity<?> updateStationFav(@PathVariable Long station_fav_id, @RequestBody Alias alias) {
         try {
-            StationFavorite updatedStationFav = ecobiciService.updateStationFav(station_fav_id, alias);
+            StationFavorite updatedStationFav = ecobiciService.updateStationFav(station_fav_id, alias.getAlias());
             return ResponseEntity.ok(updatedStationFav); // Http 200
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); //Http 404
-        } catch (LengthExceptions | OnlyLettersException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); // Http 408
+//        } catch (LengthExceptions | OnlyLettersException e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); // Http 408
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); // Http 500
         }

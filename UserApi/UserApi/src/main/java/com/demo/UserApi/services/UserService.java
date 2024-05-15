@@ -55,7 +55,7 @@ public class UserService {
         newUser.setPassword(userDto.getPassword());
         newUser.setPersonId(personId);
         //convierto el userDto a user
-        User user = userUtil.dtoToUser(userDto);
+        User user = userUtil.dtoToUser(newUser);
         try {  // Guardo el nuevo objeto de la clase User en mi user-bd
             return userRepository.save(user);
         } //si no...

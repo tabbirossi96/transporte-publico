@@ -129,7 +129,7 @@ public class PersonService {
 
         this.validateFormatDNI(dni);
 
-        Person existingPerson = personRepository.findByDNI(personDto.getDni());
+        Person existingPerson = personRepository.findByDni(personDto.getDni());
         if (existingPerson != null) {
             throw new UniqueException("Este DNI ya fue utilizado");
         }
@@ -176,7 +176,7 @@ public class PersonService {
     }
 
     private void validateFormatDNI(int dni) throws Exception {
-        if (dni >= 1 && dni < 99999999) {
+        if (dni < 1 && dni > 99999999) {
             throw new NumberDniException("Numero de Dni incongruente");
         }
     }
@@ -190,7 +190,7 @@ public class PersonService {
     //metodo que busca un personId por DNI
     public Long getPersonIdByDNI(int dni) {
         //busco en la bd la persona que tenga ese DNI
-        Person person = personRepository.findByDNI(dni);
+        Person person = personRepository.findByDni(dni);
         //si encuentra la persona, me devuelve el personId.
         if (person != null) {
             return person.getId();

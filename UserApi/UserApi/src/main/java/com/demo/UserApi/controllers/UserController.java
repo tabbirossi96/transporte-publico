@@ -48,8 +48,8 @@ public class UserController {
     @GetMapping("/find-user/{id}") // busca user por id
     public ResponseEntity<?> findUser(@PathVariable Long id) {
         try {
-            UserDto userDto = userService.findUser(id);
-            return new ResponseEntity<>(findUser(id), HttpStatus.OK); //Http 202
+            UserDto responseUser = userService.findUser(id);
+            return new ResponseEntity<>(responseUser, HttpStatus.OK); //Http 202
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
         }//otro error...
@@ -99,18 +99,6 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
         } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-//----------------------------------------------------------------------------------------------------------------------
-
-    @GetMapping("/find-id-by-DNI/{dni}") //busca el personid a traves de su DNI
-    public ResponseEntity<Long> getPersonIdByDNI(@PathVariable int dni) {
-        try {
-            Long personId = userService.getPersonIdByDNI(dni);
-            return new ResponseEntity<>(personId, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
