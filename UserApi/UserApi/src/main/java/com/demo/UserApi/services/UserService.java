@@ -51,7 +51,7 @@ public class UserService {
         //Creo una nueva instancia llamada newUser. Esta instancia representa al usuario que deseo crear
         UserDto newUser = new UserDto();
         // Defino los valores de los atributos de mi nuevo User. esto ingresa por body
-        newUser.setUserName(userDto.getUserName()); //TODO: HACER QUE EL USERNAME SEA UNICO EN LA BD
+        newUser.setUserName(userDto.getUserName());
         newUser.setPassword(userDto.getPassword());
         newUser.setPersonId(personId);
         //convierto el userDto a user

@@ -20,7 +20,7 @@ public class StationFavorite {
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long station_fav_id;
-
+    private String alias;
     //atributos a traer desde USER-API
     private Long user_id;
 
@@ -33,6 +33,6 @@ public class StationFavorite {
     private String status;
 
 
-
-
+    public StationFavorite(Long station_fav_id, Long user_id, String station_id, String name, String address, int num_bikes_available, int num_docks_available, String status, String alias) {
+    }
 }
