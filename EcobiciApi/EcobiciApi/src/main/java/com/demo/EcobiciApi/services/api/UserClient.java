@@ -15,12 +15,6 @@ public interface UserClient {
 
     // llamo a los servicios que quiero usar de USER-API
 
-    @GetMapping("/all-user") //trae todos los users
-    List<User> allUser();
-
-    @GetMapping("/find-user/{id}") // busca user por id
-    User findUser(@PathVariable Long id);
-
     @GetMapping("/find-id-by-username/{username}")
     Long findIdByUsername(@PathVariable String username);
 

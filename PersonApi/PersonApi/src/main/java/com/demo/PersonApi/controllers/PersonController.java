@@ -35,7 +35,7 @@ public class PersonController {
     }
 
     @PostMapping("/create-person") //crear persona
-    public ResponseEntity<?> createPerson(@RequestBody PersonDto personDto) throws Exception {
+    public ResponseEntity<?> createPerson(@RequestBody PersonDto personDto) {
        try {
            Person savedPerson = personService.savePerson(personDto);
            //si lo mandado por el body tiene el formato correcto...
@@ -62,7 +62,7 @@ public class PersonController {
     }
 
     @PutMapping("/update-person") // actualiza persona
-    public ResponseEntity<?> updatePerson(@RequestBody PersonDto personDto) throws Exception {
+    public ResponseEntity<?> updatePerson(@RequestBody PersonDto personDto) {
         try {
             Person updatedPerson = personService.updatePerson(personDto);
             //si lo mandado por el body tiene el formato correcto...
@@ -91,6 +91,8 @@ public class PersonController {
         }
     }
 
+//----------------------------------------------------------------------------------------------------------------------
+
     @GetMapping("/find-id-by-DNI/{dni}")
     public ResponseEntity<?> findIdByDNI(@PathVariable int dni) {
         try {
@@ -104,4 +106,7 @@ public class PersonController {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+//----------------------------------------------------------------------------------------------------------------------
+
 }

@@ -15,13 +15,7 @@ public interface PersonClient {
 
     // llamo a los servicios que quiero usar de PersonApi
 
-    @GetMapping("/all-persons")
-    List<PersonDto> allPersons();
-
-    @GetMapping("/find-person/{id}")
-    PersonDto findPerson(@PathVariable Long id);
-
-    @GetMapping("/find-id-by-DNI/{dni}")
+    @GetMapping("/find-id-by-DNI/{dni}") //busca el personid a traves de su DNI
     Long findIdByDNI(@PathVariable int dni);
 }
 

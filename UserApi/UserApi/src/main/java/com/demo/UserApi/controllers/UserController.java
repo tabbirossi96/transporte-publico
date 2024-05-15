@@ -22,55 +22,53 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/all-user") //trae todos los users
-    public ResponseEntity<?> allUser(){
-        try{
+    public ResponseEntity<?> allUser() {
+        try {
             List<UserDto> userDto = userService.allUser();
             if (userDto.isEmpty()) { //si la lista esta vacia...
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT); //Http 204
             }//si encuentra la lista...
             return new ResponseEntity<>(userDto, HttpStatus.OK); //Http 200
         }//otro error...
-        catch (Exception e){
+        catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
         }
     }
 
     @PostMapping("/create-user/{dni}") //crea users
-    public ResponseEntity<?> createUser(@RequestBody UserDto userDto,@PathVariable int dni) throws Exception {
+    public ResponseEntity<?> createUser(@RequestBody UserDto userDto, @PathVariable int dni) {
         try {
             User savedUser = userService.createUser(userDto, dni);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/find-user/{id}") // busca user por id
     public ResponseEntity<?> findUser(@PathVariable Long id) {
-        try{
+        try {
             UserDto userDto = userService.findUser(id);
-            return  new ResponseEntity<>(findUser(id),HttpStatus.OK); //Http 202
-        }
-        catch(EntityNotFoundException e){
+            return new ResponseEntity<>(findUser(id), HttpStatus.OK); //Http 202
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
         }//otro error...
-        catch (Exception e){
+        catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
         }
     }
 
     @PutMapping("/update-user") // actualiza users
-    public ResponseEntity<?> updateUser(@RequestBody UserDto userDto) throws Exception{
+    public ResponseEntity<?> updateUser(@RequestBody UserDto userDto) {
         try {
             User updateUser = userService.updateUser(userDto);
             //si lo mandado por el body tiene el formato correcto...
             return new ResponseEntity<>(updateUser, HttpStatus.OK); //Http 202
         } //si no...
-        catch(EntityNotFoundException e){
+        catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
         }//otro error...
-        catch (Exception e){
+        catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
         }
     }
@@ -82,16 +80,18 @@ public class UserController {
             //si lo mandado por el body tiene el formato correcto...
             return new ResponseEntity<>(deleteUser(id), HttpStatus.NO_CONTENT); //Http 204
         } //si no...
-        catch(EntityNotFoundException e){
+        catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
         }//otro error...
-        catch (Exception e){
+        catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
         }
     }
 
-    @GetMapping("/find-id-by-username/{username}")
-     public ResponseEntity<?> findIdByUsername(@PathVariable String username) {
+//----------------------------------------------------------------------------------------------------------------------
+
+    @GetMapping("/find-id-by-username/{username}") //busca el userid por su username
+    public ResponseEntity<?> findIdByUsername(@PathVariable String username) {
         try {
             Long userId = userService.getUserIdByUsername(username);
             return new ResponseEntity<>(userId, HttpStatus.OK);
@@ -101,18 +101,10 @@ public class UserController {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 //----------------------------------------------------------------------------------------------------------------------
-    @GetMapping("/all-person") //trae todas las personas //fletar
-    public List<PersonDto> allPerson(){
-        return userService.allPersons();
-    }
 
-    @GetMapping("/find-person/{id}") //busca personas por id //fletar
-    public Optional<PersonDto> findPerson(@PathVariable Long id){
-        return userService.findPerson(id);
-    }
-
-    @GetMapping("/find-id-by-DNI/{dni}")
+    @GetMapping("/find-id-by-DNI/{dni}") //busca el personid a traves de su DNI
     public ResponseEntity<Long> getPersonIdByDNI(@PathVariable int dni) {
         try {
             Long personId = userService.getPersonIdByDNI(dni);
@@ -121,6 +113,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 //----------------------------------------------------------------------------------------------------------------------
 
 }

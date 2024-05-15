@@ -140,10 +140,6 @@ public class UserService {
         this.validateFormatPassword(password);
     }
 
-//----------------------------------------------------------------------------------------------------------------------
-//  VALIDACIONES DE LOS FORMATOS DE LOS ATRIBUTOS
-//----------------------------------------------------------------------------------------------------------------------
-
     private void validateFormatUsername(String username) throws Exception {
 
         if (username == null || username.isEmpty()) {
@@ -172,22 +168,8 @@ public class UserService {
     }
 
 //----------------------------------------------------------------------------------------------------------------------
-//  PRUEBAS
+//  PRUEBA DE CONEXION
 //----------------------------------------------------------------------------------------------------------------------
-    //este metodo devuelve una lista de objetos PersonDto
-    public List<PersonDto> allPersons() {
-        // invoca un metodo "allPersons" del personClient, trae una lista de persons del microservicio PersonApi
-        return personClient.allPersons();
-    }
-
-    // metodo que busca una persona por id
-    // un Optional que puede contener un objeto o estar vacío (si no encuentra el valor solicitado)
-    // TODO: MEJORA SI EL OBJETO ESTA VACIO DEVOLVER UN MENSAJE QUE LO ACLARE (mejorar tambien en PersonApi)
-    public Optional<PersonDto> findPerson(Long id) {
-        //invoca un metodo "findPerson" del personClient, busca una persona por ID del microservicio PersonApi
-        // el "Optional.ofNullable(...)" envuelve el resultado en un Optional, porque asi el metodo lo solicita
-        return Optional.ofNullable(personClient.findPerson(id));
-    }
 
     public Long getPersonIdByDNI(int dni) {
         try {
@@ -198,6 +180,5 @@ public class UserService {
     }
 
 //----------------------------------------------------------------------------------------------------------------------
-
 
 }

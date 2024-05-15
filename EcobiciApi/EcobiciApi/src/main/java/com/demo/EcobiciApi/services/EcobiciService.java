@@ -156,10 +156,15 @@ public class EcobiciService {
     //update
     public StationFavorite updateStationFav(Long station_fav_id, String alias) throws Exception {
         try {
+            //validar el formato del alias
             this.validateFormatAlias(alias);
+            //busco en la bd la estacion favorita por su id
             StationFavorite stationFav = stationFavoriteRepository.findById(station_fav_id)
-                    .orElseThrow(() -> new EntityNotFoundException("No se puede encontrar la estacion"));
+                                        .orElseThrow(() -> //si no lo encuentro lanzo una exception
+                                                new EntityNotFoundException("No se puede encontrar la estacion"));
+            //si la encuentro le cambio el alias
             stationFav.setAlias(alias);
+            //guardo los cambios en la bd
             stationFavoriteRepository.save(stationFav);
             return stationFav;
         } catch (Exception e) {
@@ -168,8 +173,19 @@ public class EcobiciService {
         }
     }
 
-
     //delete
+    public void deleteStationFav(Long station_fav_id) throws Exception {
+        try {
+            //busco en la bd la estacion favorita por su id
+            Optional<StationFavorite> stationFav = stationFavoriteRepository.findById(station_fav_id);
+            stationFav.orElseThrow(() -> //si no lo encuentro lanzo una exception
+                    new EntityNotFoundException("No encontramos la estacion con el ID: " + station_fav_id));
+            //si encuentro la estacion la elimino
+            stationFavoriteRepository.deleteById(station_fav_id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al eliminar la estacion favortia", e);
+        }
+    }
 
 //----------------------------------------------------------------------------------------------------------------------
 // OTROS METODOS
@@ -184,6 +200,9 @@ public class EcobiciService {
             throw new OnlyLettersException("El alias solo puede contener letras");
         }
     }
+
+//----------------------------------------------------------------------------------------------------------------------
+
 }
 
 

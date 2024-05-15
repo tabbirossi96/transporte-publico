@@ -115,18 +115,6 @@ public class PersonService {
 //  OTROS METODOS
 //----------------------------------------------------------------------------------------------------------------------
 
-    //metodo que busca un personId por DNI
-    public Long getPersonIdByDNI(int dni) {
-        //busco en la bd la persona que tenga ese DNI
-        Person person = personRepository.findByDNI(dni);
-        //si encuentra la persona, me devuelve el personId.
-        if (person != null) {
-            return person.getId();
-        } else {
-            throw new EntityNotFoundException("No encontramos la persona");
-        }
-    }
-
     //Metodo para validar el ingreso de los datos
     private void validateAttributes(PersonDto personDto) throws Exception {
         String name = personDto.getName();
@@ -150,10 +138,6 @@ public class PersonService {
 
         this.validateFormatBirthdate(birthdate);
     }
-
-//----------------------------------------------------------------------------------------------------------------------
-//  VALIDACIONES DE LOS FORMATOS DE LOS ATRIBUTOS
-//----------------------------------------------------------------------------------------------------------------------
 
     private void validateFormatName(String name) throws Exception {
         if (name == null || name.isEmpty()) {
@@ -200,6 +184,18 @@ public class PersonService {
     private void validateFormatBirthdate(LocalDate birthdate) throws Exception {
         if (birthdate == null) {
             throw new NullOrVoidException("Colocar fecha de nacimiento");
+        }
+    }
+
+    //metodo que busca un personId por DNI
+    public Long getPersonIdByDNI(int dni) {
+        //busco en la bd la persona que tenga ese DNI
+        Person person = personRepository.findByDNI(dni);
+        //si encuentra la persona, me devuelve el personId.
+        if (person != null) {
+            return person.getId();
+        } else {
+            throw new EntityNotFoundException("No encontramos la persona");
         }
     }
 
