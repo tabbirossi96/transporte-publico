@@ -1,7 +1,6 @@
 package com.demo.UserApi.services;
 
 import com.demo.UserApi.exceptions.*;
-import com.demo.UserApi.models.dto.PersonDto;
 import com.demo.UserApi.models.dto.UserDto;
 import com.demo.UserApi.models.entity.User;
 import com.demo.UserApi.repositories.UserRepository;
@@ -114,18 +113,6 @@ public class UserService {
 //  OTROS METODOS
 //----------------------------------------------------------------------------------------------------------------------
 
-    //metodo que busca un userId por username
-    public Long getUserIdByUsername(String username) {
-        //busco en la bd el usuario que tenga ese username
-        User user = userRepository.findByUserName(username);
-        //si encuentra el usuario, me devuelve el userId.
-        if (user != null) {
-            return user.getId();
-        } else {
-            throw new EntityNotFoundException("No encontramos el usuario");
-        }
-    }
-
     private void validateAttributes(UserDto userDto) throws Exception {
         String userName = userDto.getUserName();
         String password = userDto.getPassword();
@@ -167,15 +154,15 @@ public class UserService {
         }
     }
 
-//----------------------------------------------------------------------------------------------------------------------
-//  PRUEBA DE CONEXION
-//----------------------------------------------------------------------------------------------------------------------
-
-    public Long getPersonIdByDNI(int dni) {
-        try {
-            return personClient.findIdByDNI(dni);
-        } catch (Exception e) {
-            throw new RuntimeException("No se pudo obtener el ID de la persona con DNI: " + dni, e);
+    //metodo que busca un userId por username
+    public Long getUserIdByUsername(String username) {
+        //busco en la bd el usuario que tenga ese username
+        User user = userRepository.findByUserName(username);
+        //si encuentra el usuario, me devuelve el userId.
+        if (user != null) {
+            return user.getId();
+        } else {
+            throw new EntityNotFoundException("No encontramos el usuario");
         }
     }
 

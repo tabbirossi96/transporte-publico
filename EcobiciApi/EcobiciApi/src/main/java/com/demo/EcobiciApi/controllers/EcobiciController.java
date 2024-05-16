@@ -1,7 +1,5 @@
 package com.demo.EcobiciApi.controllers;
 
-import com.demo.EcobiciApi.exceptions.LengthExceptions;
-import com.demo.EcobiciApi.exceptions.OnlyLettersException;
 import com.demo.EcobiciApi.models.dtos.stations.StationFavDto;
 import com.demo.EcobiciApi.models.entities.Alias;
 import com.demo.EcobiciApi.models.entities.StationAttribute;
@@ -12,11 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/stations")
@@ -30,9 +25,9 @@ public class EcobiciController {
 
     //devuelva todas las estaciones existentes
     @GetMapping("/all-station")
-    public ResponseEntity<?> getStationAttributes(@RequestParam String clientId, @RequestParam String clientSecret) {
+    public ResponseEntity<?> getStationAttributes() {
         try {
-            List<StationAttribute> stationAttributes = ecobiciService.getStationAttributes(clientId, clientSecret);
+            List<StationAttribute> stationAttributes = ecobiciService.getStationAttributes();
             if (stationAttributes.isEmpty()) { //si la lista esta vacia...
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //Http 204
             } //si hay objetos en la lista
@@ -46,10 +41,9 @@ public class EcobiciController {
     //guardar estacion favorita
     @PostMapping("/save-stationfav/{station_id}/{username}")
     public ResponseEntity<?> createStationFavorite(@RequestBody Alias alias, @PathVariable Long station_id,
-                                                   @PathVariable String username, @RequestParam String clientId,
-                                                   @RequestParam String clientSecret) {
+                                                   @PathVariable String username) {
         try {
-            StationFavorite saveStationFav = ecobiciService.saveStationFavorite(alias.getAlias(), station_id, username, clientId, clientSecret);
+            StationFavorite saveStationFav = ecobiciService.saveStationFavorite(alias.getAlias(), station_id, username);
             return ResponseEntity.status(HttpStatus.CREATED).body(saveStationFav); // Http 201
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); // Http 500

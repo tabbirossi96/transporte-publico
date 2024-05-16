@@ -24,12 +24,12 @@ public class PersonController {
         try{
             List<PersonDto> personDto = personService.allPersons();
             if (personDto.isEmpty()) { //si la lista esta vacia...
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT); //Http 204
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //Http 204
             }//si encuentra la lista...
-            return new ResponseEntity<>(personDto, HttpStatus.OK); //Http 200
+            return ResponseEntity.ok(personDto); //Http 200
         }//otro error...
         catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); //Http 500
         }
     }
 
@@ -38,10 +38,10 @@ public class PersonController {
        try {
            Person savedPerson = personService.savePerson(personDto);
            //si lo mandado por el body tiene el formato correcto...
-           return new ResponseEntity<>(savedPerson, HttpStatus.CREATED); //Http 201
+           return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson); //Http 201
        } //si no...
        catch (Exception e){
-           return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());//Http 500
         }
     }
 
@@ -50,13 +50,13 @@ public class PersonController {
         try {
             PersonDto responsePerson = personService.findPerson(id);
             //si encuentra el usuario
-            return new ResponseEntity<>(responsePerson, HttpStatus.OK); //Http 202
+            return ResponseEntity.ok(responsePerson); //Http 200
         } //si no...
         catch(EntityNotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Http 404
         }//otro error...
         catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); //Http 500
         }
     }
 
@@ -65,13 +65,13 @@ public class PersonController {
         try {
             Person updatedPerson = personService.updatePerson(personDto);
             //si lo mandado por el body tiene el formato correcto...
-            return new ResponseEntity<>(updatedPerson, HttpStatus.OK); //Http 202
+            return ResponseEntity.ok(updatedPerson); //Http 200
         } //si no...
         catch(EntityNotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Http 404
         }//otro error...
         catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); //Http 500
         }
     }
 
@@ -80,13 +80,13 @@ public class PersonController {
         try {
             personService.deletePerson(id);
             //si lo mandado por el body tiene el formato correcto...
-            return new ResponseEntity<>(deletePerson(id), HttpStatus.NO_CONTENT); //Http 204
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //Http 204
         } //si no...
         catch(EntityNotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Http 404
         }//otro error...
         catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); //Http 500
         }
     }
 
@@ -96,13 +96,13 @@ public class PersonController {
     public ResponseEntity<?> findIdByDNI(@PathVariable int dni) {
         try {
             Long personId = personService.getPersonIdByDNI(dni);
-            return new ResponseEntity<>(personId, HttpStatus.OK);
+            return ResponseEntity.ok(personId);
         }
         catch(EntityNotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Http 404
         }
-        catch (Exception ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 

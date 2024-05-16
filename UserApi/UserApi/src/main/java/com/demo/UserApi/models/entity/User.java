@@ -1,6 +1,5 @@
 package com.demo.UserApi.models.entity;
 
-import com.demo.UserApi.models.dto.PersonDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

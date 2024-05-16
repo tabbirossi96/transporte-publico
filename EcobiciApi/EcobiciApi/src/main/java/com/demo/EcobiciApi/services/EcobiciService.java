@@ -14,6 +14,7 @@ import com.demo.EcobiciApi.services.api.UserClient;
 import com.demo.EcobiciApi.utils.StationsUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,6 +26,11 @@ import java.util.Optional;
 @Service
 
 public class EcobiciService {
+
+    @Value("${ecobici.auth.clientId}")
+    private String clientId;
+    @Value("${ecobici.auth.clientSecret}")
+    private String clientSecret;
 
     @Autowired
     StationFavoriteRepository stationFavoriteRepository;
@@ -40,12 +46,12 @@ public class EcobiciService {
 //----------------------------------------------------------------------------------------------------------------------
 
     //create
-    //todo: agregar los parametros client en el controller
-    public StationFavorite saveStationFavorite(String alias, Long station_id, String username, String clientId, String clientSecret) {
+    public StationFavorite saveStationFavorite(String alias, Long station_id, String username) throws Exception {
+        this.validateFormatAlias(alias);
         //buscar el iduser en base al username
         Long userId = userClient.findIdByUsername(username);
         //traer los atributos de station atributes
-        List<StationAttribute> stationAttributes = getStationAttributes(clientId, clientSecret);
+        List<StationAttribute> stationAttributes = getStationAttributes();
         // crear un nuevo objeto StationFavorite
         StationFavorite stationFavorite = new StationFavorite();
         // encontrar el StationAttribute usando el station_id
@@ -79,58 +85,65 @@ public class EcobiciService {
     }
 
     //get-all (read)
-    public List<StationAttribute> getStationAttributes(String clientId, String clientSecret) {
+    public List<StationAttribute> getStationAttributes() {
         try {
-            //creo una lista vacía que luego tendra los atributos que yo quiero
-            List<StationAttribute> stationAttributes = new ArrayList<>();
-            // Llama al ecobiciClient, que esta se conecta con la API externa de Ecobici,
-            // para obtener los datos de station information
-            Root rootInfo = ecobiciClient.getStationInformation(clientId, clientSecret);
-            Data dataInfo = rootInfo.getData();
-            //obtengo la lista de stations information
-            ArrayList<Station> stationsinfo = dataInfo.getStations();
-
-            //itero dentro de la lista de station information
-            for (Station station : stationsinfo) {
-                //para cada estacion de la lista creo un nuevo objeto
-                StationAttribute newStation = new StationAttribute();
-                //a cada nuevo objeto, establesco los atributos que necesito de station information
-                newStation.setStation_id(station.getStation_id());
-                newStation.setName(station.getName());
-                newStation.setAddress(station.getAddress());
-                //cuando recolecte todos los atributos en el objeto newStation, los guardo en un StationAttribures
-                stationAttributes.add(newStation);
-            }
-
-            //ahora quiero llamar a station status de la API externa
-            Root rootStatus = ecobiciClient.getStationStatus(clientId, clientSecret);
-            Data dataStatus = rootStatus.getData();
-            ArrayList<Station> stationsStatus = dataStatus.getStations();
-
-            //inicio un segundo bucle para iterar en la lista de station status
-            //para obtener los atributos que quiero de esa lista
-
-            //variable para usar de indice
-            int i = 0;
-            for (StationAttribute aux : stationAttributes) {
-                for (Station stationStatus : stationsStatus) {
-                    //agarro el id de mi aux y busco en stationstatus el mismo id
-                    if (stationStatus.getStation_id().equals(aux.getStation_id())) {
-                        aux.setNum_bikes_available(stationStatus.getNum_bikes_available());
-                        aux.setNum_docks_available(stationStatus.getNum_docks_available());
-                        aux.setStatus(stationStatus.getStatus());
-                        stationAttributes.set(i, aux);
-                        break;
-                    }
-                }
-                //me muevo una posicion en el indice por cada vuelta
-                i++;
-            }
+            List<StationAttribute> stationAttributes = getStationInformation();
+            this.updateStationStatus(stationAttributes);
             //devuelvo la lista de estaciones con los atributos que yo necesito.
             return stationAttributes;
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Error", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", e);
+        }
+    }
+
+    private List<StationAttribute> getStationInformation() {
+        //creo una lista vacía que luego tendra los atributos que yo quiero
+        List<StationAttribute> stationAttributes = new ArrayList<>();
+        // Llama al ecobiciClient, que esta se conecta con la API externa de Ecobici,
+        // para obtener los datos de station information
+        Root rootInfo = ecobiciClient.getStationInformation(clientId, clientSecret);
+        Data dataInfo = rootInfo.getData();
+        //obtengo la lista de stations information
+        ArrayList<Station> stationsinfo = dataInfo.getStations();
+
+        //itero dentro de la lista de station information
+        for (Station station : stationsinfo) {
+            //para cada estacion de la lista creo un nuevo objeto
+            StationAttribute newStation = new StationAttribute();
+            //a cada nuevo objeto, establesco los atributos que necesito de station information
+            newStation.setStation_id(station.getStation_id());
+            newStation.setName(station.getName());
+            newStation.setAddress(station.getAddress());
+            //cuando recolecte todos los atributos en el objeto newStation, los guardo en un StationAttribures
+            stationAttributes.add(newStation);
+        }
+        return stationAttributes;
+    }
+
+    private void updateStationStatus(List<StationAttribute> stationAttributes) {
+        //ahora quiero llamar a station status de la API externa
+        Root rootStatus = ecobiciClient.getStationStatus(clientId, clientSecret);
+        Data dataStatus = rootStatus.getData();
+        ArrayList<Station> stationsStatus = dataStatus.getStations();
+
+        //inicio un segundo bucle para iterar en la lista de station status
+        //para obtener los atributos que quiero de esa lista
+
+        //variable para usar de indice
+        int i = 0;
+        for (StationAttribute aux : stationAttributes) {
+            for (Station stationStatus : stationsStatus) {
+                //agarro el id de mi aux y busco en stationstatus el mismo id
+                if (stationStatus.getStation_id().equals(aux.getStation_id())) {
+                    aux.setNum_bikes_available(stationStatus.getNum_bikes_available());
+                    aux.setNum_docks_available(stationStatus.getNum_docks_available());
+                    aux.setStatus(stationStatus.getStatus());
+                    stationAttributes.set(i, aux);
+                    break;
+                }
+            }
+            //me muevo una posicion en el indice por cada vuelta
+            i++;
         }
     }
 
@@ -159,8 +172,8 @@ public class EcobiciService {
             this.validateFormatAlias(alias);
             //busco en la bd la estacion favorita por su id
             StationFavorite stationFav = stationFavoriteRepository.findById(station_fav_id)
-                                        .orElseThrow(() -> //si no lo encuentro lanzo una exception
-                                                new EntityNotFoundException("No se puede encontrar la estacion"));
+                    .orElseThrow(() -> //si no lo encuentro lanzo una exception
+                            new EntityNotFoundException("No se puede encontrar la estacion"));
             //si la encuentro le cambio el alias
             stationFav.setAlias(alias);
             //guardo los cambios en la bd
@@ -193,8 +206,8 @@ public class EcobiciService {
 
     // validacio alias
     private void validateFormatAlias(String alias) throws Exception {
-        if (alias.length() < 3 || alias.length() > 10) {
-            throw new LengthExceptions("El alias debe tener entre 3 y 10 caracteres");
+        if (alias.length() < 3 || alias.length() > 15) {
+            throw new LengthExceptions("El alias debe tener entre 3 y 15 caracteres");
         }
         if (!alias.matches("[a-zA-Z ]+")) {
             throw new OnlyLettersException("El alias solo puede contener letras");
@@ -204,7 +217,6 @@ public class EcobiciService {
 //----------------------------------------------------------------------------------------------------------------------
 
 }
-
 
 
 

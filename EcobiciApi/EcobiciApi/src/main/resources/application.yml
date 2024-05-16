@@ -14,6 +14,9 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         type_contributor: com.demo.UserApi.models.PersonDtoTypeContributor
     show-sql: true
+  output:
+    ansi:
+      enabled: ALWAYS
 
 server:
   port: 8083
@@ -27,3 +30,7 @@ eureka:
   instance:
     preferIpAddress: true
 
+ecobici:
+  auth:
+    clientId: 99512ce528fa4346a461204d35deb6f6
+    clientSecret: 4441C00135Eb4659B2687bfFd89D2e55

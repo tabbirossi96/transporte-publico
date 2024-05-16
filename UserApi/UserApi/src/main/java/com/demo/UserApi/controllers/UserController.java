@@ -1,6 +1,5 @@
 package com.demo.UserApi.controllers;
 
-import com.demo.UserApi.models.dto.PersonDto;
 import com.demo.UserApi.models.dto.UserDto;
 import com.demo.UserApi.models.entity.User;
 import com.demo.UserApi.services.UserService;
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -26,12 +24,12 @@ public class UserController {
         try {
             List<UserDto> userDto = userService.allUser();
             if (userDto.isEmpty()) { //si la lista esta vacia...
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT); //Http 204
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //Http 204
             }//si encuentra la lista...
-            return new ResponseEntity<>(userDto, HttpStatus.OK); //Http 200
+            return ResponseEntity.ok(userDto); //Http 200
         }//otro error...
         catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); //Http 500
         }
     }
 
@@ -39,9 +37,9 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody UserDto userDto, @PathVariable int dni) {
         try {
             User savedUser = userService.createUser(userDto, dni);
-            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser); //Http 201
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -51,10 +49,10 @@ public class UserController {
             UserDto responseUser = userService.findUser(id);
             return new ResponseEntity<>(responseUser, HttpStatus.OK); //Http 202
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Http 404
         }//otro error...
         catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); //Http 500
         }
     }
 
@@ -63,13 +61,13 @@ public class UserController {
         try {
             User updateUser = userService.updateUser(userDto);
             //si lo mandado por el body tiene el formato correcto...
-            return new ResponseEntity<>(updateUser, HttpStatus.OK); //Http 202
+            return ResponseEntity.ok(updateUser); //Http 200
         } //si no...
         catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Http 404
         }//otro error...
         catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); //Http 500
         }
     }
 
@@ -78,13 +76,13 @@ public class UserController {
         try {
             userService.deleteUser(id);
             //si lo mandado por el body tiene el formato correcto...
-            return new ResponseEntity<>(deleteUser(id), HttpStatus.NO_CONTENT); //Http 204
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //Http 204
         } //si no...
         catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Http 404
         }//otro error...
         catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //Http 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); //Http 500
         }
     }
 
@@ -94,11 +92,11 @@ public class UserController {
     public ResponseEntity<?> findIdByUsername(@PathVariable String username) {
         try {
             Long userId = userService.getUserIdByUsername(username);
-            return new ResponseEntity<>(userId, HttpStatus.OK);
+            return ResponseEntity.ok(userId); //Http 200
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND); // Http 404
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Http 404
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); //Http 500
         }
     }
 
