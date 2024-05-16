@@ -3,6 +3,9 @@ package com.demo.PersonApi.controllers;
 import com.demo.PersonApi.models.entities.Person;
 import com.demo.PersonApi.models.dtos.PersonDto;
 import com.demo.PersonApi.services.PersonService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,12 @@ public class PersonController {
     @Autowired
     PersonService personService;
 
+    @Operation(summary = "Trae una lista con todos las personas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "La lista de personas se encuentra vacia"),
+            @ApiResponse(responseCode = "200", description = "Lista encontrada"),
+            @ApiResponse(responseCode = "500", description = "Error")})
+
     @GetMapping("/all-persons") //trae todas las personas
     public ResponseEntity<?> allPersons(){
         try{
@@ -33,6 +42,11 @@ public class PersonController {
         }
     }
 
+    @Operation(summary = "Crea una nueva persona")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Persona creada exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error")})
+
     @PostMapping("/create-person") //crear persona
     public ResponseEntity<?> createPerson(@RequestBody PersonDto personDto) {
        try {
@@ -44,6 +58,12 @@ public class PersonController {
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());//Http 500
         }
     }
+
+    @Operation(summary = "Busca una persona por su Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Persona encontrada"),
+            @ApiResponse(responseCode = "404", description = "No se encontro una persona con ese Id"),
+            @ApiResponse(responseCode = "500", description = "Error")})
 
     @GetMapping("/find-person/{id}") // busca persona por id
     public ResponseEntity<?> findPerson(@PathVariable Long id) {
@@ -60,6 +80,12 @@ public class PersonController {
         }
     }
 
+    @Operation(summary = "Actualiza los datos de una persona")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Persona actualizada"),
+            @ApiResponse(responseCode = "404", description = "No se encontro una persona con ese Id"),
+            @ApiResponse(responseCode = "500", description = "Error")})
+
     @PutMapping("/update-person") // actualiza persona
     public ResponseEntity<?> updatePerson(@RequestBody PersonDto personDto) {
         try {
@@ -74,6 +100,12 @@ public class PersonController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); //Http 500
         }
     }
+
+    @Operation(summary = "Elimina una persona")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Persona eliminada"),
+            @ApiResponse(responseCode = "404", description = "No se encontro una persona con ese Id"),
+            @ApiResponse(responseCode = "500", description = "Error")})
 
     @DeleteMapping("/delete-person/{id}") // elimina persona
     public ResponseEntity<?> deletePerson(@PathVariable Long id) {
@@ -91,6 +123,12 @@ public class PersonController {
     }
 
 //----------------------------------------------------------------------------------------------------------------------
+
+    @Operation(summary = "Busca el id por su DNI", description = "Se le pasa por el path el DNI, busca en base de datos una persona con ese DNI y devuelve el id de la persona" )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "UserId encontrado"),
+            @ApiResponse(responseCode = "404", description = "No se encontro usuario con ese Username"),
+            @ApiResponse(responseCode = "500", description = "Error")})
 
     @GetMapping("/find-id-by-DNI/{dni}")
     public ResponseEntity<?> findIdByDNI(@PathVariable int dni) {

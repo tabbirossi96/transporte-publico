@@ -5,6 +5,9 @@ import com.demo.EcobiciApi.models.entities.Alias;
 import com.demo.EcobiciApi.models.entities.StationAttribute;
 import com.demo.EcobiciApi.models.entities.StationFavorite;
 import com.demo.EcobiciApi.services.EcobiciService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,13 @@ public class EcobiciController {
 //----------------------------------------------------------------------------------------------------------------------
 
     //devuelva todas las estaciones existentes
+
+    @Operation(summary = "Trae una lista de todas las estaciones de Ecobici", description = "Se conecta a la API Transporte, donde obtenemos información GTFS de las estaciones de Ecobici en CABA. Tomamos cada estacion, y los datos de ella que son de nuestro interes, y las guardamos en una lista de estaciones" )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de estaciones"),
+            @ApiResponse(responseCode = "204", description = "Lista de estaciones vacia"),
+            @ApiResponse(responseCode = "500", description = "Error")})
+
     @GetMapping("/all-station")
     public ResponseEntity<?> getStationAttributes() {
         try {
@@ -38,6 +48,11 @@ public class EcobiciController {
         }
     }
 
+    @Operation(summary = "Guardar estacion como favorito", description = "De la lista de estaciones, tomamos una por su station_id y le asignamos un usuario, y la guardamos en base de datos" )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Estacion favortia guardada"),
+            @ApiResponse(responseCode = "500", description = "Error")})
+
     //guardar estacion favorita
     @PostMapping("/save-stationfav/{station_id}/{username}")
     public ResponseEntity<?> createStationFavorite(@RequestBody Alias alias, @PathVariable Long station_id,
@@ -49,6 +64,12 @@ public class EcobiciController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); // Http 500
         }
     }
+
+    @Operation(summary = "Busca las estaciones favoritas de un usuario", description = "Busca en la base de datos todas las estaciones favortias que correspondan a un mismo usuario, y devuelve una lista con las mismas" )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "UserId encontrado"),
+            @ApiResponse(responseCode = "404", description = "No se encontro usuario con ese Username"),
+            @ApiResponse(responseCode = "500", description = "Error")})
 
     //busca las estaciones favortias por Usuario
     @GetMapping("/find-station-fav-by-user/{user_id}")
@@ -65,6 +86,12 @@ public class EcobiciController {
         }
     }
 
+    @Operation(summary = "Actualiza el alias de una estacion favortia" )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "UserId encontrado"),
+            @ApiResponse(responseCode = "404", description = "No se encontro usuario con ese Username"),
+            @ApiResponse(responseCode = "500", description = "Error")})
+
     //actualizar alias de la estacion favorita
     @PutMapping("/update-stationFav/{station_fav_id}")
     public ResponseEntity<?> updateStationFav(@PathVariable Long station_fav_id, @RequestBody Alias alias) {
@@ -79,6 +106,12 @@ public class EcobiciController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); // Http 500
         }
     }
+
+    @Operation(summary = "Elimina una estacion como favortia de la base de datos" )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "UserId encontrado"),
+            @ApiResponse(responseCode = "404", description = "No se encontro usuario con ese Username"),
+            @ApiResponse(responseCode = "500", description = "Error")})
 
     //elimina una estacion de las estaciones favortias de un usuario
     @DeleteMapping("/delete-stationfav/{station_fav_id}")
