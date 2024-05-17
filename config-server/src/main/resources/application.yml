@@ -1,0 +1,13 @@
+server:
+    port: 8085
+spring:
+    cloud:
+        config:
+            server:
+                git:
+                    default-label: mail
+                    uri: #url del repo remoto
+                    search-paths: config-data
+    application:
+        name: config-service
+
