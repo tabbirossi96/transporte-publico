@@ -16,9 +16,6 @@ public class StationFavDto {
         private String station_id;
         private String name;
         private String address;
-        private int num_bikes_available;
-        private int num_docks_available;
-        private String status;
         private String alias;
 
     }

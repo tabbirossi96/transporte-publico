@@ -26,14 +26,13 @@ public class EcobiciController {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-    //devuelva todas las estaciones existentes
-
     @Operation(summary = "Trae una lista de todas las estaciones de Ecobici", description = "Se conecta a la API Transporte, donde obtenemos información GTFS de las estaciones de Ecobici en CABA. Tomamos cada estacion, y los datos de ella que son de nuestro interes, y las guardamos en una lista de estaciones" )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de estaciones"),
             @ApiResponse(responseCode = "204", description = "Lista de estaciones vacia"),
             @ApiResponse(responseCode = "500", description = "Error")})
 
+    //devuelva todas las estaciones existentes
     @GetMapping("/all-station")
     public ResponseEntity<?> getStationAttributes() {
         try {
@@ -65,7 +64,7 @@ public class EcobiciController {
         }
     }
 
-    @Operation(summary = "Busca las estaciones favoritas de un usuario", description = "Busca en la base de datos todas las estaciones favortias que correspondan a un mismo usuario, y devuelve una lista con las mismas" )
+    @Operation(summary = "Busca las estaciones favoritas de un usuario", description = "Busca en la base de datos todas las estaciones favortias que correspondan a un mismo usuario, y devuelve una lista con las mismas, pero con mas datos" )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "UserId encontrado"),
             @ApiResponse(responseCode = "404", description = "No se encontro usuario con ese Username"),
@@ -75,7 +74,7 @@ public class EcobiciController {
     @GetMapping("/find-station-fav-by-user/{user_id}")
     public ResponseEntity<?> getStationFavByUserId(@PathVariable Long user_id) {
         try {
-            List<StationFavDto> stationFavDtos = ecobiciService.getStationFavByUserId(user_id);
+            List<StationAttribute> stationFavDtos = ecobiciService.getStationFavByUserId(user_id);
             return ResponseEntity.ok(stationFavDtos);
         }
         catch (EntityNotFoundException e) {

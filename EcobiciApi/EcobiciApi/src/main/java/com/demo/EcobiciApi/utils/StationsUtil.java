@@ -12,16 +12,12 @@ public class StationsUtil {
 
     public StationFavDto StationFavToDto (StationFavorite stationFavorite){
         return new StationFavDto(stationFavorite.getStation_fav_id(), stationFavorite.getUser_id(),
-                stationFavorite.getStation_id(), stationFavorite.getName(), stationFavorite.getAddress(),
-                stationFavorite.getNum_bikes_available(), stationFavorite.getNum_docks_available(),
-                stationFavorite.getStatus(), stationFavorite.getAlias());
+                stationFavorite.getStation_id(), stationFavorite.getName(), stationFavorite.getAddress(), stationFavorite.getAlias());
     }
 
     public StationFavorite DtoToStationFav (StationFavDto StationFavDto){
         return new StationFavorite(StationFavDto.getStation_fav_id(), StationFavDto.getUser_id(),
-                StationFavDto.getStation_id(), StationFavDto.getName(), StationFavDto.getAddress(),
-                StationFavDto.getNum_bikes_available(), StationFavDto.getNum_docks_available(),
-                StationFavDto.getStatus(), StationFavDto.getAlias());
+                StationFavDto.getStation_id(), StationFavDto.getName(), StationFavDto.getAddress(), StationFavDto.getAlias());
     }
 
 }

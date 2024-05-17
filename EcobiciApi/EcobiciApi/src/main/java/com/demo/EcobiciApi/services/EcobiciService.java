@@ -53,7 +53,7 @@ public class EcobiciService {
         //busco en la lista de stationAttribute la estacion que quiero guardar en fav
         StationAttribute stationAttribute = this.findStationAttributeById(station_id);
         //traigo el objeto stationfavorite al que ya le guarde los atributos de la estacion indicada
-        StationFavorite stationFavorite = getFavorite(alias, userId, stationAttribute);
+        StationFavorite stationFavorite = this.getFavorite(alias, userId, stationAttribute);
         // Guardar el objeto StationFavorite en la base de datos
         try {
             return stationFavoriteRepository.save(stationFavorite);
@@ -78,21 +78,20 @@ public class EcobiciService {
     }
 
     //find-by-userId List  (read)
-    public List<StationFavDto> getStationFavByUserId(Long user_id) {
+    public List<StationAttribute> getStationFavByUserId(Long user_id) {
         //busca las stacionesfavoritas para ese user_id
         List<StationFavorite> stationDB = stationFavoriteRepository.findByUser_id(user_id);
         if (stationDB.isEmpty()) { //si la lista vuelve vacia
             throw new EntityNotFoundException("No encontramos estaciones favoritas");
         }
-        List<StationFavDto> stationFavDtos = new ArrayList<>();
+        List<StationAttribute> stationAttributes = new ArrayList<>();
         for (StationFavorite stationFavorite : stationDB) { //recorro la lista
-            //de stationFavorite a stationFavDto
-            StationFavDto stationFavDto = stationsUtil.StationFavToDto(stationFavorite);
-            //agrego la stationfavdto a la lista
-            stationFavDtos.add(stationFavDto);
+            //busco los atributos de la estación
+            StationAttribute stationAttribute = this.findStationAttributeById(Long.valueOf(stationFavorite.getStation_id()));
+            //agrego los atributos a la lista
+            stationAttributes.add(stationAttribute);
         }
-        return stationFavDtos;
-
+        return stationAttributes;
     }
 
     //update
@@ -187,7 +186,7 @@ public class EcobiciService {
 
     private StationAttribute findStationAttributeById(Long station_id) {
         //traigo la lista completa de staciones con los atibutos
-        List<StationAttribute> stationAttributes = getStationAttributes();
+        List<StationAttribute> stationAttributes = this.getStationAttributes();
         for (StationAttribute sa : stationAttributes) {
             //busca la estacion que yo quiero poner como favorita comparando los station_id
             if (sa.getStation_id().equals(String.valueOf(station_id))) {
@@ -204,9 +203,6 @@ public class EcobiciService {
         stationFavorite.setStation_id(stationAttribute.getStation_id());
         stationFavorite.setName(stationAttribute.getName());
         stationFavorite.setAddress(stationAttribute.getAddress());
-        stationFavorite.setNum_bikes_available(stationAttribute.getNum_bikes_available());
-        stationFavorite.setNum_docks_available(stationAttribute.getNum_docks_available());
-        stationFavorite.setStatus(stationAttribute.getStatus());
         stationFavorite.setAlias(alias);
         //los guardo en un objeto stationFavorite
         return stationFavorite;

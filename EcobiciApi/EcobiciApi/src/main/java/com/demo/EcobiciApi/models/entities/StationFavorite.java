@@ -28,11 +28,12 @@ public class StationFavorite {
     private String station_id;
     private String name;
     private String address;
-    private int num_bikes_available;
-    private int num_docks_available;
-    private String status;
+//    private int num_bikes_available;
+//    private int num_docks_available;
+//    private String status;
 
 
-    public StationFavorite(Long station_fav_id, Long user_id, String station_id, String name, String address, int num_bikes_available, int num_docks_available, String status, String alias) {
+    public StationFavorite(Long station_fav_id, Long user_id, String station_id, String name, String address,
+                           String alias) {
     }
 }
