@@ -12,9 +12,7 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         type_contributor: com.demo.UserApi.models.PersonDtoTypeContributor
     show-sql: true
-  output:
-    ansi:
-      enabled: ALWAYS
+
 server:
   port: 8082
 

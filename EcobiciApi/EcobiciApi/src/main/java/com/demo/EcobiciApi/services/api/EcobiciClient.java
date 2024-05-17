@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient (name = "ecobici-services", url = "https://apitransporte.buenosaires.gob.ar/ecobici/gbfs")
+@FeignClient (name = "transporte", url = "${transporte.api.url}")
 public interface EcobiciClient {
 
     @GetMapping("/stationInformation")

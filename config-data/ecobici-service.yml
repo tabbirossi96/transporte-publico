@@ -12,9 +12,6 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         type_contributor: com.demo.UserApi.models.PersonDtoTypeContributor
     show-sql: true
-  output:
-    ansi:
-      enabled: ALWAYS
 
 server:
   port: 8083
@@ -27,6 +24,10 @@ eureka:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
   instance:
     preferIpAddress: true
+
+transporte:
+  api:
+    url: https://apitransporte.buenosaires.gob.ar/ecobici/gbfs
 
 ecobici:
   auth:

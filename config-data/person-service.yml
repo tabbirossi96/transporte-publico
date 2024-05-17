@@ -11,9 +11,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
-  output:
-    ansi:
-      enabled: ALWAYS
+
 server:
   port: 8081
 eureka:
