@@ -6,7 +6,7 @@ spring:
             server:
                 git:
                     default-label: mail
-                    uri: #url del repo remoto
+                    uri: https://github.com/tabbirossi96/transporte-publico.git
                     search-paths: config-data
     application:
         name: config-service
