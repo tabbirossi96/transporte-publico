@@ -5,7 +5,7 @@ spring:
         config:
             server:
                 git:
-                    default-label: mail
+                    default-label: main
                     uri: https://github.com/tabbirossi96/transporte-publico.git
                     search-paths: config-data
     application:

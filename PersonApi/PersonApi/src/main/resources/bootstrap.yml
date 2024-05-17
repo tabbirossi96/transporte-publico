@@ -1,4 +1,8 @@
 spring:
   application:
     name: person-service
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8085
 

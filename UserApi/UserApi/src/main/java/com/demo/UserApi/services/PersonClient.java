@@ -4,7 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 //se conecta con el microservicio PersonApi con Eureka
-@FeignClient(name = "person-services", path = "/persons")
+@FeignClient(name = "person-service", path = "/persons")
 
 public interface PersonClient {
 
