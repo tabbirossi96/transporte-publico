@@ -8,9 +8,9 @@
   <modules>
   	<module>config-server</module>
     <module>eureka-server/eureka-server</module>
-    <module>PersonApi</module>
-	<module>UserApi</module>
-	<module>EcobiciApi</module>
+    <module>PersonApi/PersonApi</module>
+	<module>UserApi/UserApi</module>
+	<module>EcobiciApi/EcobiciApi</module>
 	
   </modules>
 </project>
